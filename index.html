@@ -1,0 +1,170 @@
+<html>
+  <head>
+    <title>Is It Cripto?</title>
+    <link rel="icon" type="image/x-icon" href="./rindo.png" />
+
+    <style>
+      input:focus,
+      textarea:focus,
+      select:focus {
+        outline: none;
+      }
+
+      body {
+        font-family: sans-serif;
+      }
+
+      #question {
+        max-width: 350px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+      }
+
+      #question input {
+        border-radius: 24px;
+        height: 44px;
+        border: 1px solid #dfe1e5;
+        font-size: 24px;
+        padding: 10px 20px;
+      }
+
+      #question button {
+        background-color: #f8f9fa;
+        border: 1px solid #f8f9fa;
+        border-radius: 4px;
+        color: #3c4043;
+        font-family: arial, sans-serif;
+        font-size: 14px;
+        margin: 11px 4px;
+        padding: 0 16px;
+        line-height: 27px;
+        height: 36px;
+        min-width: 54px;
+        text-align: center;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      #question button:hover {
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        background-color: #f8f9fa;
+        border: 1px solid #dadce0;
+        color: #202124;
+      }
+
+      #result {
+        max-width: 350px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .good-result {
+        background-color: #e6fffa;
+        border-radius: 4px;
+        color: #2b5709;
+        font-family: arial, sans-serif;
+        font-size: 14px;
+        margin: 11px 4px;
+        padding: 16px;
+        text-align: center;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .bad-result {
+        background-color: #ffebee;
+        border-radius: 4px;
+        color: #861f18;
+        font-family: arial, sans-serif;
+        font-size: 14px;
+        margin: 11px 4px;
+        padding: 16px;
+        text-align: center;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      #footer {
+        position: absolute;
+        bottom: 10px;
+        font-size: 10px;
+        color: #7d8083;
+      }
+
+      #footer a {
+        color: #2b6eb1;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="question">
+      <h1>Is It Cripto?</h1>
+      <form action="javascript:is_it_cripto()">
+        <input id="criptos" type="text" />
+        <button id="btn" type="submit">Is it?</button>
+      </form>
+    </div>
+
+    <div id="result"></div>
+
+    <div id="footer">
+      made by <a href="https://twitter.com/bissuh" target="_blank">@bissuh</a>
+    </div>
+
+    <script>
+      const is_it_cripto = async () => {
+        const criptos = document.getElementById('criptos').value;
+        const criptos_array = criptos
+          .split(',')
+          .map((cripto) => cripto.trim())
+          .filter((cripto) => cripto.length > 0);
+
+        document.getElementById('btn').innerHTML = 'Asking Cripto Lords...';
+
+        const response = await fetch('https://api.abalustre.com/is-it-cripto', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': 'wwWy36wtkF76tKgS3u3re8QliWowSnbzacSteV6f',
+          },
+          body: JSON.stringify({ criptos: criptos_array }),
+          mode: 'cors',
+        });
+
+        const cripto_element = document.getElementById('result');
+        cripto_element.innerHTML = '';
+
+        const { data } = await response.json();
+        Object.keys(data).forEach((cripto) => {
+          if (data[cripto]) {
+            cripto_element.innerHTML += `<div class="good-result">${cripto} is a cripto</div>`;
+            return;
+          }
+          cripto_element.innerHTML += `<div class="bad-result">${cripto} is not a cripto</div>`;
+        });
+
+        document.getElementById('btn').innerHTML = 'Is it?';
+      };
+    </script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-Q8P41EN0RP"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-Q8P41EN0RP');
+    </script>
+  </body>
+</html>
